@@ -1,0 +1,21 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>NBA Covid</title>
+    <link rel="stylesheet" href="{{ url_for('static',path='/1.css') }}"/>
+</head>
+<body>
+
+    <div class="r1" style="width:300px;height:235px;top:20px;">
+       <form method="POST" action="/search">
+        <br>Section <input type="text" name="num1" style="width:50px">
+        <br><br>Row <input type="text" name="num2" style="width:50px">
+        <br><br>Seat Range <input type="text" name="num3" style="width:50px;left:0px;position:relative;">
+        <br><br>
+        <button type="submit" style="width:150px;height:35px;top:35px;left:25px;position:relative;">Search</button>
+        <!-- <button type="button" style="width:50px;height:35px;top:35px;left:135px;position:relative;">Clear</button> -->
+        </form>
+        </div>
+</body>
+</html>

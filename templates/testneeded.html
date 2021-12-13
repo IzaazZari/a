@@ -1,0 +1,20 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>NBA Covid</title>
+    <link rel="stylesheet" href="{{ url_for('static',path='/1.css') }}"/>
+</head>
+<body>
+
+    <h1>
+        This seat requires Covid testing.
+        <br>
+        <img width="100px" src="{{ url_for('static',path='/reject.png') }}">
+    </h1>
+    <h2>You entered this for the section: {{section}}</h2>
+    <h2>You entered this for the row: {{row}}</h2>
+    <h2>You entered this for the seat: {{seat}}</h2>
+    <a href="/search">Click here to do another search.</a> 
+</body>
+</html>

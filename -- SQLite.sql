@@ -1,0 +1,2 @@
+-- SQLite
+delete FROM arena;
