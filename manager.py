@@ -11,7 +11,28 @@ import sqlite3
 import re
 import itertools as it
 
+from fastapi import Depends, FastAPI, HTTPException, status
+from fastapi.security import HTTPBasic, HTTPBasicCredentials
+
+import secrets
+
 app = FastAPI()
+
+security=HTTPBasic()
+
+def get_current_username(credentials: HTTPBasicCredentials = Depends(security)):
+    correct_username = secrets.compare_digest(credentials.username, "test")
+    correct_password = secrets.compare_digest(credentials.password, "test")
+    if not (correct_username and correct_password):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect email or password",
+            headers={"WWW-Authenticate": "Basic"},
+        )
+    return credentials.username
+
+
+
 
 app.mount("/static",StaticFiles(directory=Path(__file__).parent.parent.absolute() / "static")
 ,name="static")
@@ -19,15 +40,27 @@ app.mount("/static",StaticFiles(directory=Path(__file__).parent.parent.absolute(
 templates = Jinja2Templates(directory="templates")
 
 @app.get("/",response_class=HTMLResponse)
-async def funcEnterInput(f1:Request):
+async def funcEnterInput(f1:Request,username:str=Depends(get_current_username)):
     return templates.TemplateResponse("1.html",{"request":f1})
 
+
 @app.get("/search",response_class=HTMLResponse)
-async def funcSearch(f1:Request):
+async def funcSearch(f1:Request,username:str=Depends(get_current_username)):
     return templates.TemplateResponse("search.html",{"request":f1})
 
+@app.post("/delete",response_class=HTMLResponse)
+async def funcDelete(f3:Request,username:str=Depends(get_current_username)):
+    cn=sqlite3.connect("arena.db")
+    cn.execute("delete FROM arena;")
+    cn.commit()
+    cn.close()
+    return templates.TemplateResponse("delete.html",{"request":f3})
+
+
+    
+
 @app.post("/search",response_class=HTMLResponse)
-async def funcSearchResults(f1:Request,num1: str= Form(...),num2:str=Form(...),num3:str=Form(...)):
+async def funcSearchResults(f1:Request,num1: str= Form(...),num2:str=Form(...),num3:str=Form(...),username:str=Depends(get_current_username)):
     print(f1)
     print(num1)
     print(num2)
