@@ -16,13 +16,18 @@ from fastapi.security import HTTPBasic, HTTPBasicCredentials
 
 import secrets
 
+import configparser
+
+config=configparser.ConfigParser()
+config.read('config.ini')
+
 app = FastAPI()
 
 security=HTTPBasic()
 
 def get_current_username(credentials: HTTPBasicCredentials = Depends(security)):
-    correct_username = secrets.compare_digest(credentials.username, "test")
-    correct_password = secrets.compare_digest(credentials.password, "test")
+    correct_username = secrets.compare_digest(credentials.username, config['DEFAULT']['username'])
+    correct_password = secrets.compare_digest(credentials.password, config['DEFAULT']['password'])
     if not (correct_username and correct_password):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
